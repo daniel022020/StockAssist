@@ -1,0 +1,414 @@
+﻿<UserControl x:Class="StockAssist.StockCrawler.Views.StockCrawler"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:StockAssist.StockCrawler.ViewModels"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
+             ui:ThemeManager.RequestedTheme="Dark"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" 
+             d:DesignWidth="1000"
+             Loaded="StockCrawler_Loaded">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type GroupBox}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="10,5,5,5"/>
+            <Setter Property="Padding" Value="15"/>
+
+            <Setter Property="Background" Value="#1E222B"/>
+
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupBox}">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6" 
+                        SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" 
+                                Background="#252D37" 
+                                CornerRadius="5,5,0,0" 
+                                Padding="12,10,12,10"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0,0,0,1">
+
+                                    <ContentPresenter ContentSource="Header" 
+                                              TextBlock.Foreground="#E2E8F0" 
+                                              TextBlock.FontSize="18" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Border>
+
+                                <ContentPresenter Grid.Row="1" 
+                                          Margin="{TemplateBinding Padding}" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyle" 
+               TargetType="{x:Type Button}" 
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="5,2,5,2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="TextBoxStyle" 
+               TargetType="{x:Type TextBox}" 
+               BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="5,2,5,2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="#2D3139" 
+            BorderBrush="#D1D1D1" 
+            CornerRadius="5" 
+            Padding="10" 
+            Margin="10"
+            HorizontalAlignment="Stretch"  
+            VerticalAlignment="Stretch">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="290"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="{Binding LangService.Resources[StockCrawlerSystem]}" 
+                      IsEnabled="{Binding IsEnableStart}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" 
+                                   Foreground="White"/>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="883*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"  
+                                   Text="{Binding LangService.Resources[TickerSymbol]}" 
+                                   Foreground="White" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5"/>
+
+                        <Grid Grid.Column="1" 
+                              Width="145" 
+                              HorizontalAlignment="Left" 
+                              IsEnabled="{Binding IsEnableAddTicker}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" 
+                                     Text="{Binding TxtTicker, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Margin="2">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Enter" 
+                                                Command="{Binding AddTickerCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+
+                            <Button Grid.Column="1" 
+                                    Style="{StaticResource ButtonStyle}"
+                                    Content="+" 
+                                    Command="{Binding AddTickerCommand}" 
+                                    Width="30" 
+                                    BorderThickness="0" 
+                                    FontWeight="Bold" 
+                                    Cursor="Hand" 
+                                    Margin="2"/>
+                        </Grid>
+
+                        <TextBlock Grid.Column="2"  
+                                   Text="{Binding LangService.Resources[Hint]}" 
+                                   Foreground="Gray" 
+                                   VerticalAlignment="Bottom" 
+                                   FontSize="14"
+                                   Margin="10"/>
+
+                        <Grid Grid.Column="4" 
+                              Width="150" 
+                              Height="40" 
+                              Margin="5">
+
+                            <Button Content="{Binding LangService.Resources[Start]}" 
+                                    Command="{Binding StartCommand}" 
+                                    Visibility="{Binding StartButtonVisibility}"
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Stretch"
+                                    Background="#00875A" 
+                                    Foreground="White" 
+                                    FontSize="18"
+                                    BorderThickness="0" 
+                                    Cursor="Hand"/>
+
+                            <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding ProcessingVisibility}">
+
+                                <ui:ProgressRing IsActive="True" 
+                                                 Width="30" 
+                                                 Height="30"
+                                                 Margin="5"
+                                                 Foreground="#CBD5E1" 
+                                                 VerticalAlignment="Center"/>
+
+                                <TextBlock Text="{Binding LangService.Resources[Processing]}" 
+                                           Foreground="#CBD5E1"  
+                                           FontSize="18" 
+                                           Margin="5" 
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Grid.Column="0"
+                                  Content="{Binding LangService.Resources[AllHistory]}" 
+                                  IsChecked="{Binding IsAllHistory}" 
+                                  FontSize="16"
+                                  Margin="5" 
+                                  VerticalAlignment="Center" 
+                                  Cursor="Hand"/>
+
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal" 
+                                    Visibility="{Binding DatePanelVisibility}">
+
+                            <TextBlock Text="{Binding LangService.Resources[From]}" 
+                                       Foreground="White" 
+                                       FontSize="16"
+                                       Margin="5"
+                                       VerticalAlignment="Center"/>
+
+                            <DatePicker SelectedDate="{Binding StartDate}" 
+                                        ui:ControlHelper.PlaceholderText="{Binding LangService.Resources[SelectDate]}" 
+                                        Width="120" 
+                                        Margin="5" 
+                                        Cursor="Hand"
+                                        Focusable="False">
+                                <DatePicker.Resources>
+                                    <Style TargetType="DatePickerTextBox" BasedOn="{StaticResource {x:Type DatePickerTextBox}}">
+                                        <Setter Property="IsReadOnly" Value="True"/>
+                                        <Setter Property="IsHitTestVisible" Value="False"/>
+                                    </Style>
+                                </DatePicker.Resources>
+                            </DatePicker>
+
+                            <TextBlock Text="{Binding LangService.Resources[To]}" 
+                                       Foreground="White" 
+                                       FontSize="16"
+                                       Margin="5"
+                                       VerticalAlignment="Center"/>
+
+                            <DatePicker SelectedDate="{Binding EndDate}" 
+                                        ui:ControlHelper.PlaceholderText="{Binding LangService.Resources[SelectDate]}" 
+                                        Width="120" 
+                                        Margin="5" 
+                                        Cursor="Hand"
+                                        Focusable="False">
+                                <DatePicker.Resources>
+                                    <Style TargetType="DatePickerTextBox" BasedOn="{StaticResource {x:Type DatePickerTextBox}}">
+                                        <Setter Property="IsReadOnly" Value="True"/>
+                                        <Setter Property="IsHitTestVisible" Value="False"/>
+                                    </Style>
+                                </DatePicker.Resources>
+                            </DatePicker>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Grid.Column="0"
+                                  Content="{Binding LangService.Resources[OutputCsv]}" 
+                                  IsChecked="{Binding IsOutputCsv}" 
+                                  FontSize="16"
+                                  Margin="5" 
+                                  VerticalAlignment="Center" 
+                                  Cursor="Hand"/>
+
+                        <Grid Grid.Column="1"
+                              Visibility="{Binding CsvPathVisibility}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" 
+                                     Text="{Binding CsvFolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Width="450" 
+                                     Margin="2"
+                                     HorizontalAlignment="Stretch" 
+                                     VerticalAlignment="Center"/>
+
+                            <Button Grid.Column="1" 
+                                    Content="📁" 
+                                    Command="{Binding SelectCsvFollderActionCommand}"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Width="35" 
+                                    Margin="2" 
+                                    VerticalAlignment="Center" 
+                                    Cursor="Hand"/>
+
+                            <TextBlock Grid.Column="3" 
+                                       Text="{Binding LangService.Resources[DateFormat]}" 
+                                       Foreground="White" 
+                                       FontSize="16"
+                                       Margin="5"
+                                       VerticalAlignment="Center"/>
+
+                            <ComboBox Grid.Column="4"
+                                      ui:ControlHelper.PlaceholderText="{Binding LangService.Resources[Placeholder]}"
+                                      ItemsSource="{Binding DateFormats}"
+                                      SelectedItem="{Binding SelectedDateFormat, Mode=TwoWay}"
+                                      Height="30"
+                                      Width="150"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="3" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"  
+                                   Text="{Binding LangService.Resources[List]}" 
+                                   Foreground="#D6D6D6" 
+                                   FontSize="12"
+                                   Margin="5"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1"  
+                                   Text="{Binding ListCount}" 
+                                   Foreground="#D6D6D6" 
+                                   FontSize="12"
+                                   Margin="5"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="3"
+                                  VerticalScrollBarVisibility="Auto" 
+                                  HorizontalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" Margin="0,25,0,0" Grid.RowSpan="2">
+
+                        <ItemsControl ItemsSource="{Binding TickerList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Width="{Binding ViewportWidth, RelativeSource={RelativeSource AncestorType=ScrollViewer}}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#444444" 
+                                            CornerRadius="12" 
+                                            Margin="0,0,8,5" 
+                                            Padding="10,4">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding}" 
+                                                       Foreground="White" 
+                                                       FontSize="12" 
+                                                       VerticalAlignment="Center"/>
+
+                                            <Button Content="×" 
+                                                    Command="{Binding DataContext.RemoveTickerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                    CommandParameter="{Binding}" 
+                                                    Margin="5,0,0,0" 
+                                                    Foreground="#FF6B6B" 
+                                                    Background="Transparent" 
+                                                    BorderThickness="0" 
+                                                    FontWeight="Bold"
+                                                    Cursor="Hand"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </GroupBox>
+
+            <wv2:WebView2 x:Name="StockWebview"
+                          Grid.Row="2" 
+                          DefaultBackgroundColor="Transparent"
+                          Margin="10">
+                <wv2:WebView2.Style>
+                    <Style TargetType="wv2:WebView2">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnableStart}" Value="True"/>
+                                    <Condition Binding="{Binding IsProcessing}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
+
+                            <DataTrigger Binding="{Binding IsProcessing}" Value="True">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </wv2:WebView2.Style>
+            </wv2:WebView2>
+
+        </Grid>
+    </Border>
+</UserControl>

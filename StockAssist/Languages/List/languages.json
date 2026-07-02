@@ -1,0 +1,18 @@
+[
+	{
+		"DisplayName": "繁體中文",
+		"LanguageCode": "zh-TW"
+	},
+	{
+		"DisplayName": "简体中文",
+		"LanguageCode": "zh-CN"
+	},
+	{
+		"DisplayName": "日本語",
+		"LanguageCode": "ja-JP"
+	},
+	{
+		"DisplayName": "English",
+		"LanguageCode": "en-US"
+	}
+]

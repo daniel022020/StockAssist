@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #2D3139;
+            color: #eee;
+            font-family: sans-serif;
+            overflow-y: auto;
+        }
+
+        .chart-container {
+            width: 95%;
+            height: 300px;
+            margin: 18px auto;
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .chart-title {
+            padding: 10px 20px 0 20px;
+            font-size: 17px;
+            font-weight: bold;
+            color: #007ACC;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #2D3139;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        .js-plotly-plot .plotly .spikeline {
+            stroke-dasharray: 4, 4 !important;
+            stroke-width: 1px !important;
+            shape-rendering: crispEdges !important;
+            stroke-opacity: 0.6 !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-wrapper">
+    </div>
+
+    <script>
+        function updateCharts(allData) {
+            const wrapper = document.getElementById('main-wrapper');
+            wrapper.innerHTML = '';
+
+            // 如果總資料是空的、null 或是 undefined，直接結束不處理
+            if (!allData || typeof allData !== 'object') return;
+
+            Object.entries(allData).forEach(([ticker, records]) => {
+
+                // records 不存在、有後端傳回的 error 欄位、資料不是陣列、資料筆數為 0 則跳過
+                if (!records || records.error || !Array.isArray(records) || records.length === 0) {
+                    return;
+                }
+
+                // 如果 Close 是 null、undefined 或 NaN，則那幾天剃除
+                const validRecords = records.filter(r => r && r.Date && r.Close !== null && r.Close !== undefined && !isNaN(r.Close));
+
+                // 如果過濾完，發現一筆有效數據都沒有，一樣跳過
+                if (validRecords.length === 0) {
+                    return;
+                }
+
+                // --- 開始畫圖 ---
+                const containerId = 'chart-' + ticker.replace('.', '-');
+                const div = document.createElement('div');
+                div.className = 'chart-container';
+                div.innerHTML = `<div class="chart-title">${ticker}</div><div id="${containerId}" style="height:250px;"></div>`;
+                wrapper.appendChild(div);
+
+                const trace = {
+                    x: validRecords.map(r => r.Date),
+                    y: validRecords.map(r => r.Close),
+                    name: 'Close',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: '#17BECF', width: 2 },
+                    showspikes: true,
+                    spikemode: 'across',
+                    spikedash: 'dash',
+                    spikecolor: '#AAA',
+                    spikethickness: 1,
+                    spikesnap: 'cursor'
+                };
+
+                const layout = {
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: '#ccc', size: 10 },
+                    hovermode: 'x unified',
+                    hoverdistance: -1,
+                    margin: { t: 15, b: 30, l: 50, r: 30 },
+                    xaxis: {
+                        color: '#888',
+                        gridcolor: '#333',
+                        showspikes: true,
+                        spikemode: 'across',
+                    },
+                    yaxis: {
+                        color: '#888',
+                        gridcolor: '#333',
+                        showspikes: true,
+                        autorange: true,
+                    }
+                };
+
+                const config = {
+                    responsive: true,
+                    displaylogo: false,
+                    showTips: false,
+                    modeBarButtonsToRemove: [
+                        'select2d',
+                        'lasso2d',
+                        'resetScale2d'
+                    ]
+                };
+
+                Plotly.newPlot(containerId, [trace], layout, config);
+            });
+        }
+    </script>
+</body>
+</html>
