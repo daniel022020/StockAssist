@@ -11,7 +11,12 @@ namespace StockAssist.StockCrawler.Models
     {
         private Process _pythonProcess;
 
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new HttpClient(new HttpClientHandler
+        {
+            // 改善冷啟動後第一次交互過慢的問題
+            UseProxy = false,
+            Proxy = null
+        });
 
         public void StartStockCrawler()
         {
