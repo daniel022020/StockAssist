@@ -67,7 +67,7 @@ namespace StockAssist.Setting.ViewModels
                 Assembly assembly = Assembly.GetExecutingAssembly();
 
                 // 版號
-                string version = assembly.GetName().Version?.ToString() ?? "2.6.0.3";
+                string version = assembly.GetName().Version?.ToString() ?? "2.6.0.4";
 
                 // 取得 Copyright
                 var copyrightAttr = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
@@ -88,7 +88,7 @@ namespace StockAssist.Setting.ViewModels
             catch (Exception)
             {
                 // 預設值
-                CopyRights = "Version 2.6.0.3\nDeveloper : Daniel Yang\nContact : daniel022020@gmail.com\n© 2026 Daniel Yang. All rights reserved.";
+                CopyRights = "Version 2.6.0.4\nDeveloper : Daniel Yang\nContact : daniel022020@gmail.com\n© 2026 Daniel Yang. All rights reserved.";
             }
         }
     }
