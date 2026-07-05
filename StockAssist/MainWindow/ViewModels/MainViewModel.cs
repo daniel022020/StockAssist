@@ -12,7 +12,7 @@ namespace StockAssist.MainWindow.ViewModels
     public class MainViewModel : ObservableRecipient
     {
         private readonly IStockService _stockService;
-        private readonly ICsvExportService _csvExportService;
+        private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
 
         // StockCrawler ViewModel
@@ -31,11 +31,11 @@ namespace StockAssist.MainWindow.ViewModels
         public MainViewModel()
         {
             _stockService = new StockService();
-            _csvExportService = new CsvExportService();
-            _dialogService = new WpfDialogService();
+            _dataService = new DataService();
+            _dialogService = new DialogService();
 
             // 頁面初始化
-            StockCrawlerVM = new StockCrawlerViewModel(_stockService, _csvExportService, _dialogService);
+            StockCrawlerVM = new StockCrawlerViewModel(_stockService, _dataService, _dialogService);
             SettingVM = new SettingViewModel();
 
             // 預設 0  (StockCrawler)

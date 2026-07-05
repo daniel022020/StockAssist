@@ -17,7 +17,7 @@ namespace StockAssist.Setting.ViewModels
 
         private string _copyRights;
 
-        // 清單數量 (UI顯示)
+        // 版權、版號
         public string CopyRights
         {
             get => _copyRights;

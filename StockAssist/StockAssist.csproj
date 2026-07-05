@@ -76,11 +76,11 @@
     <Compile Include="Setting\Views\Setting.xaml.cs" />
     <Compile Include="StockCrawler\Models\IStockService.cs" />
     <Compile Include="StockCrawler\Models\StockService.cs" />
-    <Compile Include="StockCrawler\Services\CsvExportService.cs" />
+    <Compile Include="StockCrawler\Services\DataService.cs" />
     <Compile Include="StockCrawler\Services\ICsvExportService.cs" />
     <Compile Include="StockCrawler\Services\IDialogService.cs" />
     <Compile Include="StockCrawler\Services\StockDetail.cs" />
-    <Compile Include="StockCrawler\Services\WpfDialogService.cs" />
+    <Compile Include="StockCrawler\Services\DialogService.cs" />
     <Compile Include="StockCrawler\ViewModels\StockCrawlerViewModel.cs" />
     <Compile Include="StockCrawler\Views\StockCrawler.xaml.cs" />
   </ItemGroup>

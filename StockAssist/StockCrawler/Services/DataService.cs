@@ -8,7 +8,7 @@ using StockAssist.Log;
 
 namespace StockAssist.StockCrawler.Services
 {
-    public class CsvExportService : ICsvExportService
+    public class DataService : IDataService
     {
         // 多國語言
         public LanguageService LangService => LanguageService.Instance;

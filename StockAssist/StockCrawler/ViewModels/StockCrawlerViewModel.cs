@@ -24,7 +24,7 @@ namespace StockAssist.StockCrawler.ViewModels
         public LanguageService LangService => LanguageService.Instance;
 
         private readonly IStockService _stockService;         // 爬蟲服務
-        private readonly ICsvExportService _csvExportService; // 資料與 CSV 服務
+        private readonly IDataService _dataService;           // 資料與 CSV 服務
         private readonly IDialogService _dialogService;       // 視窗對話服務
         private int _maxListCount = 10;
 
@@ -45,11 +45,11 @@ namespace StockAssist.StockCrawler.ViewModels
         // 初始化
         public StockCrawlerViewModel(
             IStockService stockService,
-            ICsvExportService csvExportService,
+            IDataService dataService,
             IDialogService dialogService)
         {
             _stockService = stockService;
-            _csvExportService = csvExportService;
+            _dataService = dataService;
             _dialogService = dialogService;
 
             InitialCrawlSettings();
@@ -470,7 +470,7 @@ namespace StockAssist.StockCrawler.ViewModels
 
                 await Task.Run(() =>
                 {
-                    jsonString = _csvExportService.CleanJsonStringFormat(rawJsonString, out errorString);
+                    jsonString = _dataService.CleanJsonStringFormat(rawJsonString, out errorString);
                 });
 
                 LogService.Logger.Info("Update webview");
@@ -488,7 +488,7 @@ namespace StockAssist.StockCrawler.ViewModels
 
                     try
                     {
-                        await Task.Run(() => { _csvExportService.ExportCsv(jsonString, currentPath, currentFormat); });
+                        await Task.Run(() => { _dataService.ExportCsv(jsonString, currentPath, currentFormat); });
                     }
                     catch (Exception csvEx)
                     {

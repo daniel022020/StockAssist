@@ -3,7 +3,7 @@
 namespace StockAssist.StockCrawler.Services
 {
     // WPF 環境下的具體實作
-    public class WpfDialogService : IDialogService
+    public class DialogService : IDialogService
     {
         public void ShowError(string message, string title)
         {
