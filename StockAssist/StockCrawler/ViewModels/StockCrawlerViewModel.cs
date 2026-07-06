@@ -302,8 +302,8 @@ namespace StockAssist.StockCrawler.ViewModels
             }
             catch (Exception ex)
             {
-                _dialogService.ShowError(LangService.GetLanguageString("InitialCrawlSettingsError") + $":{ex.Message}", "Error");
                 LogService.Logger.Fatal(ex, "[Exception] Initial crawl settings fail");
+                _dialogService.ShowError(LangService.GetLanguageString("InitialCrawlSettingsError") + $":{ex.Message}", "Error");
             }
         }
 
@@ -329,11 +329,11 @@ namespace StockAssist.StockCrawler.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    LogService.Logger.Fatal(ex, "[Exception] Backend service fail, Mesage");
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
                         _dialogService.ShowError(LangService.GetLanguageString("BackendServiceError") + $":{ex.Message}", "Error");
                     });
-                    LogService.Logger.Fatal(ex, "[Exception] Backend service fail, Mesage");
                 }
             });
         }
@@ -349,8 +349,8 @@ namespace StockAssist.StockCrawler.ViewModels
             }
             catch (Exception ex)
             {
-                _dialogService.ShowError(LangService.GetLanguageString("StopBackendServiceError") + $":{ex.Message}", "Error");
                 LogService.Logger.Fatal(ex, "[Exception] Close backend service fail");
+                _dialogService.ShowError(LangService.GetLanguageString("StopBackendServiceError") + $":{ex.Message}", "Error");
             }
         }
 
@@ -390,8 +390,8 @@ namespace StockAssist.StockCrawler.ViewModels
             }
             catch (Exception ex)
             {
-                _dialogService.ShowError(LangService.GetLanguageString("AddTickerError") + $":{ex.Message}", "Error");
                 LogService.Logger.Fatal(ex, "[Exception] Add ticker fail");
+                _dialogService.ShowError(LangService.GetLanguageString("AddTickerError") + $":{ex.Message}", "Error");
             }
         }
 
@@ -510,8 +510,8 @@ namespace StockAssist.StockCrawler.ViewModels
                 IsProcessing = false;
                 IsEnableStart = true;
 
-                _dialogService.ShowError(LangService.GetLanguageString("StartCrawlDataError") + $":{ex.Message}", "Error");
                 LogService.Logger.Fatal(ex, "[Exception] Start crawl data fail");
+                _dialogService.ShowError(LangService.GetLanguageString("StartCrawlDataError") + $":{ex.Message}", "Error");
             }
         }
 
@@ -563,14 +563,14 @@ namespace StockAssist.StockCrawler.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    _dialogService.ShowError(LangService.GetLanguageString("SelectFolderError") + $":{ex.Message}", "Error");
                     LogService.Logger.Fatal(ex, "[Exception] Select folder fail");
+                    _dialogService.ShowError(LangService.GetLanguageString("SelectFolderError") + $":{ex.Message}", "Error");
                 }
             }
             else
             {
-                _dialogService.ShowError(LangService.GetLanguageString("SelectFolderError"));
                 LogService.Logger.Fatal("selectedPath is null or empty!");
+                _dialogService.ShowError(LangService.GetLanguageString("SelectFolderError"));
             }
         }
 
