@@ -137,6 +137,7 @@ namespace StockAssist.StockCrawler.Services
 
                 foreach (var stock in allData)
                 {
+                    // Header (Date,Open,High,Low,Close,Volume)
                     StringBuilder csv = new StringBuilder("Date,Open,High,Low,Close,Volume\n");
 
                     stock.Value.ForEach(d =>
@@ -156,7 +157,8 @@ namespace StockAssist.StockCrawler.Services
                     File.WriteAllText(Path.Combine(folderPath, $"{stock.Key.Replace(":", "_")}.csv"), csv.ToString(), Encoding.UTF8);
                 }
 
-                LogService.Logger.Info($"Write all csv success");
+                LogService.Logger.Info("Write all csv success");
+
             }
             catch (Exception ex)
             {

@@ -121,7 +121,6 @@ namespace StockAssist.StockCrawler.ViewModels
         public Visibility CsvPathVisibility => IsOutputCsv ? Visibility.Visible : Visibility.Collapsed;
 
         private DateTime _startDate;
-
         // 爬取起始日期
         public DateTime StartDate
         {
@@ -203,7 +202,7 @@ namespace StockAssist.StockCrawler.ViewModels
         }
 
         // 下拉選單的日期格式清單
-        public ObservableCollection<string> DateFormats { get; set; }
+        public List<string> DateFormatItems { get; } = new List<string> { "yyyyMMdd", "yyyy/MM/dd" };
 
         // 目前選中的日期格式
         private string _selectedDateFormat;
@@ -289,23 +288,14 @@ namespace StockAssist.StockCrawler.ViewModels
                     EndDate = DateTime.Now; // 預設今天
                 }
 
-
-                // 初始化日期格式清單
-                DateFormats = new ObservableCollection<string>
-                                {
-                                    "yyyyMMdd",
-                                    "yyyy/MM/dd",
-                                };
-
-
                 // 檢查並設定日期格式
-                if (DateFormats.Contains(settings.dateFormatStr))
+                if (DateFormatItems.Contains(settings.dateFormatStr))
                 {
                     SelectedDateFormat = settings.dateFormatStr;
                 }
                 else
                 {
-                    SelectedDateFormat = DateFormats[0]; // 預設使用第一個 ("yyyyMMdd")
+                    SelectedDateFormat = DateFormatItems[0]; // 預設使用第一個 ("yyyyMMdd")
                 }
 
                 LogService.Logger.Info("Initial crawl settings success");
@@ -488,7 +478,16 @@ namespace StockAssist.StockCrawler.ViewModels
 
                     try
                     {
-                        await Task.Run(() => { _dataService.ExportCsv(jsonString, currentPath, currentFormat); });
+                        // 判斷資料夾是否存在
+                        if (Directory.Exists(currentPath))
+                        {
+                            await Task.Run(() => { _dataService.ExportCsv(jsonString, currentPath, currentFormat); });
+                        }
+                        else
+                        {
+                            LogService.Logger.Info($"File:{currentPath} does noe exist");
+                            csvErrorMessage = LangService.GetLanguageString("OutputCsvPathFormatError");
+                        }
                     }
                     catch (Exception csvEx)
                     {

@@ -279,7 +279,7 @@
                                   Cursor="Hand"/>
 
                         <Grid Grid.Column="1"
-                              Visibility="{Binding CsvPathVisibility}">
+                              Visibility="{Binding CsvPathVisibility}" Cursor="">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -314,7 +314,7 @@
 
                             <ComboBox Grid.Column="4"
                                       ui:ControlHelper.PlaceholderText="{Binding LangService.Resources[Placeholder]}"
-                                      ItemsSource="{Binding DateFormats}"
+                                      ItemsSource="{Binding DateFormatItems}"
                                       SelectedItem="{Binding SelectedDateFormat, Mode=TwoWay}"
                                       Height="30"
                                       Width="150"

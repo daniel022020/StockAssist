@@ -77,7 +77,7 @@
     <Compile Include="StockCrawler\Models\IStockService.cs" />
     <Compile Include="StockCrawler\Models\StockService.cs" />
     <Compile Include="StockCrawler\Services\DataService.cs" />
-    <Compile Include="StockCrawler\Services\ICsvExportService.cs" />
+    <Compile Include="StockCrawler\Services\IDataService.cs" />
     <Compile Include="StockCrawler\Services\IDialogService.cs" />
     <Compile Include="StockCrawler\Services\StockDetail.cs" />
     <Compile Include="StockCrawler\Services\DialogService.cs" />
